@@ -3810,6 +3810,7 @@ input, select, textarea {
 				#main > .post {
 					padding: 6rem 4rem 4rem 4rem ;
 				}
+				
 
 			}
 
@@ -3829,6 +3830,14 @@ input, select, textarea {
 						line-height: 1.2;
 						margin: 0 0 1.5rem 0;
 					}
+				#main > .post.featured.generic {
+					text-align: center;
+					padding: 3rem 3rem 2rem 3rem;
+				}
+		
+				#main > .post.generic {
+					padding: 4rem 2rem 2rem 2rem;
+				}
 
 			}
 
