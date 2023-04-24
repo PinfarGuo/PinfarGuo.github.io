@@ -1,0 +1,375 @@
+<!DOCTYPE HTML>
+<!--
+	Massively by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>PFG - Personal Investment Project</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<span class="logo">Personal Investment Project</span>
+					</header>
+
+				<!-- Nav -->
+					<nav id="nav">
+						<ul class="links">
+							<li><a href="index.html">Movies Project</a></li>
+							<li><a href="dataSalary.html">Data Salary Project</a></li>
+							<li class="active"><a href="personalInvestment.html">Personal Investment Project</a></li>
+							<li><a href="covid.html">COVID Project</a></li>
+						</ul>
+						<ul class="icons">
+							<li><a href="https://www.linkedin.com/in/pin-far-guo/" target="_blank" rel="noopener noreferrer" class="icon brands alt fa-linkedin"><span class="label">LinkedIn</span></a></li>
+							<li><a href="https://github.com/PinfarGuo" target="_blank" rel="noopener noreferrer" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+						</ul>
+					</nav>
+
+				<!-- Main -->
+					<div id="main">
+
+						<!-- Featured Post - Personal Investment Project -->
+						<article class="post featured">
+							<img src="images/DataProfessionalProject.jpg" alt="" width="100%"/>
+						</article>
+
+						<!-- Post -->
+						<section class="post generic">
+							<p>Objective: use Python with backtesting and talib library to back test strategies to confirm validity before putting strategy in use in stock market.
+								Normally traders use popular indicators like SMA and MACD to help find stocks that are oversold to buy in and then wait until stocks are overbought to sell.</p>
+							<h2>SMA - Simple Moving Average</h2>
+							<p>Investopedia - How Are Simple Moving Averages Used in Technical Analysis?</p>
+							<p>&quot;Traders use simple moving averages (SMAs) to chart the long-term trajectory of a stock or other security, while ignoring the <a href="https://www.investopedia.com/terms/n/noise.asp">noise</a> of day-to-day price movements. This allows traders to compare medium- and long-term trends over a larger time horizon. For example, if the 200-day SMA of a security falls below its 50-day SMA, this is usually interpreted as a bearish death cross pattern and a signal of further declines. The opposite pattern, the golden cross, indicates potential for a market rally.&quot;</p>
+							<p>Popular values for SMA are 50 days, 100 days, and 200 days, but what happens if we change those values? Will it increase or decrease the ROI (return on investments)?</p>
+							<pre><code class="language-python">class MySMAStrategy(Strategy): 
+    def init(self):
+        price = self.data.Close
+        self.ma1 = self.I(SMA, price, ma1_days)
+        self.ma2 = self.I(SMA, price, ma2_days)
+        
+    def next(self):
+        if crossover(self.ma1, self.ma2):
+            self.buy()
+        elif crossover(self.ma2, self.ma1):
+            self.sell()
+
+start = dt.datetime(2020,1,1)
+end = dt.datetime(2023,1,1)
+data = yf.download('TSLA', start, end)
+
+ma1_days = 50
+ma2_days = 100
+
+backtest = Backtest(data, MySMAStrategy, commission=.002, exclusive_orders=True)
+
+print(backtest.run())
+backtest.plot(filename='sma_strat_default')            
+</code></pre>
+							<p>A simple python code  using the backtesting library to set the base line of how changing values of the SMA lines will impact ROI for company Tesla.</p>
+							<p>Results:</p>
+							<table>
+								<thead>
+									<tr>
+										<th>Info</th>
+										<th>Values</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Start</td>
+										<td>2020-01-02 00:00:00</td>
+									</tr>
+									<tr>
+										<td>End</td>
+										<td>2022-12-30 00:00:00</td>
+									</tr>
+									<tr>
+										<td>Duration</td>
+										<td>1093 days 00:00:00</td>
+									</tr>
+									<tr>
+										<td>Return [%]</td>
+										<td>33.899739</td>
+									</tr>
+									<tr>
+										<td>Buy &amp; Hold Return [%]</td>
+										<td>329.438015</td>
+									</tr>
+									<tr>
+										<td>Number of Trades</td>
+										<td>7</td>
+									</tr>
+									<tr>
+										<td>Win Rate [%]</td>
+										<td>57.142857</td>
+									</tr>
+									<tr>
+										<td>Avg. Trade Duration</td>
+										<td>89 days 00:00:00</td>
+									</tr>
+								</tbody>
+							</table>
+							<p>Here we can see that within the time frame of 3 years with 7 days we only made about 33.9% return, while if we Buy and Hold we will make more at 329.44%. So the default values of 50 days and 100 days is not as profitable.</p>
+							<p>Now lets change the value to something else, lets say 10, 17.</p>
+							<pre><code class="language-python">ma1_days = 10
+ma2_days = 17
+
+backtest = Backtest(data, MySMAStrategy, commission=.002, exclusive_orders=True)
+
+print(backtest.run())
+backtest.plot(filename='sma_strat_ideal')
+</code></pre>
+							<p>Results:</p>
+							<table>
+								<thead>
+									<tr>
+										<th>Info</th>
+										<th>Values</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Start</td>
+										<td>2020-01-02 00:00:00</td>
+									</tr>
+									<tr>
+										<td>End</td>
+										<td>2022-12-30 00:00:00</td>
+									</tr>
+									<tr>
+										<td>Duration</td>
+										<td>1093 days 00:00:00</td>
+									</tr>
+									<tr>
+										<td>Return [%]</td>
+										<td>901.722154</td>
+									</tr>
+									<tr>
+										<td>Buy &amp; Hold Return [%]</td>
+										<td>329.438015</td>
+									</tr>
+									<tr>
+										<td>Number of Trades</td>
+										<td>47</td>
+									</tr>
+									<tr>
+										<td>Win Rate [%]</td>
+										<td>48.93617</td>
+									</tr>
+									<tr>
+										<td>Avg. Trade Duration</td>
+										<td>22 days 00:00:00</td>
+									</tr>
+								</tbody>
+							</table>
+							<p>Using the new values of 10 and 17 days we can see that the ROI has shot up to around 901.72% vs 33.9% when using the default value. Additionally, vs the Buy and Hold ROI there is nearly a 600% increase, which makes this a really good strategy to try.</p>
+							<p>The following is the default vs ideal values graphed out so that you can see when and where the trades occurred more easily.</p>
+							<p><img src="images/sma_strat_default.jpg" alt="SMA Strategy Default" width="100%"></p>
+							<p><img src="images/sma_strat_ideal.jpg" alt="SMA Strategy Ideal" width="100%"></p>
+
+								<hr/>
+
+								<h2>MACD - Moving average convergence/divergence</h2>
+								<p>Investopedia -  What Is Moving Average Convergence/Divergence (MACD)?</p>
+								<p>&quot;Moving average convergence/divergence (MACD, or MAC-D) is a <a href="https://www.investopedia.com/terms/t/trendtrading.asp">trend-following</a> <a href="https://www.investopedia.com/terms/m/momentum.asp">momentum</a> indicator that shows the relationship between two <a href="https://www.investopedia.com/terms/e/ema.asp">exponential moving averages (EMAs)</a> of a <a href="https://www.investopedia.com/terms/s/security.asp">security’s</a> price. The MACD line is calculated by subtracting the 26-period EMA from the 12-period EMA.&quot;</p>
+								<p>Now lets try out MACD and see how it compares to SMA.</p>
+
+								<pre><code class="language-python">class MyMACDStrategy(Strategy):
+    def init(self):
+        price = self.data.Close
+        self.macd = self.I(lambda x: talib.MACD(x,macd_fast,macd_slow,macd_signal)[0], price)
+        self.macd_signal  = self.I(lambda x: talib.MACD(x,macd_fast,macd_slow,macd_signal)[1], price)
+        
+    def next(self):
+        if crossover(self.macd, self.macd_signal):
+            self.buy()
+        elif crossover(self.macd_signal, self.macd):
+            self.sell()
+
+start = dt.datetime(2020,1,1)
+end = dt.datetime(2023,1,1)
+data = yf.download('TSLA', start, end)
+
+macd_fast = 12
+macd_slow = 26
+macd_signal = 9
+
+backtest = Backtest(data, MyMACDStrategy, commission=.002, exclusive_orders=True)
+
+print(backtest.run())
+backtest.plot(filename='macd_strat_default')
+</code></pre>
+
+								<p>Results:</p>
+								<table>
+									<thead>
+										<tr>
+											<th>Info</th>
+											<th>Values</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>Start</td>
+											<td>2020-01-02 00:00:00</td>
+										</tr>
+										<tr>
+											<td>End</td>
+											<td>2022-12-30 00:00:00</td>
+										</tr>
+										<tr>
+											<td>Duration</td>
+											<td>1093 days 00:00:00</td>
+										</tr>
+										<tr>
+											<td>Return [%]</td>
+											<td>-28.476508</td>
+										</tr>
+										<tr>
+											<td>Buy &amp; Hold Return [%]</td>
+											<td>329.438015</td>
+										</tr>
+										<tr>
+											<td>Number of Trades</td>
+											<td>59</td>
+										</tr>
+										<tr>
+											<td>Win Rate [%]</td>
+											<td>33.898305</td>
+										</tr>
+										<tr>
+											<td>Avg. Trade Duration</td>
+											<td>18 days 00:00:00</td>
+										</tr>
+									</tbody>
+								</table>
+
+								<p>With the default MACD values we can see that the ROI is much worst than the Buy and Hold ROI, and also worst than the default SMA ROI.
+									Now lets see if we can change that by changing the MACD values.</p>
+
+									<pre><code class="language-python">macd_fast = 10
+macd_slow = 22
+macd_signal = 4
+
+backtest = Backtest(data, MyMACDStrategy, commission=.002, exclusive_orders=True)
+
+print(backtest.run())
+backtest.plot(filename='macd_strat_better')
+</code></pre>
+
+								<p>Results:</p>
+								<table>
+									<thead>
+										<tr>
+											<th>Info</th>
+											<th>Values</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>Start</td>
+											<td>2020-01-02 00:00:00</td>
+										</tr>
+										<tr>
+											<td>End</td>
+											<td>2022-12-30 00:00:00</td>
+										</tr>
+										<tr>
+											<td>Duration</td>
+											<td>1093 days 00:00:00</td>
+										</tr>
+										<tr>
+											<td>Return [%]</td>
+											<td>137.303131</td>
+										</tr>
+										<tr>
+											<td>Buy &amp; Hold Return [%]</td>
+											<td>329.438015</td>
+										</tr>
+										<tr>
+											<td>Number of Trades</td>
+											<td>83</td>
+										</tr>
+										<tr>
+											<td>Win Rate [%]</td>
+											<td>36.144578</td>
+										</tr>
+										<tr>
+											<td>Avg. Trade Duration</td>
+											<td>13 days 00:00:00</td>
+										</tr>
+									</tbody>
+								</table>
+
+								<p>After changing the values multiple time the highest ROI I found with the MACD is around 137.3%, which is much better than the default, but still worst when compared to the Buy and Hold ROI and SMA ROI while having to do more trades.</p>
+								<p>Now lets see the MACD strategy graphed out vs the SMA ideal strategy.</p>
+								<p><img src="images/MACD_strat_better.jpg" alt="MACD Strategy Better" width="100%"></p>
+								<p><img src="images/sma_strat_ideal.jpg" alt="SMA Strategy Ideal" width="100%"></p>
+							
+								<hr/>
+							
+							<h2>Links</h2>
+							<p>Please also take a look at the following links to the github repository and python code</p>
+
+							<ul class="actions">
+								<li><a href="https://github.com/PinfarGuo/PersonalInvestment" target="_blank" rel="noopener noreferrer" class="button">View Repository</a></li>
+								<li><a href="https://github.com/PinfarGuo/PersonalInvestment/blob/main/Backtesting_Trading_Strategies.ipynb" target="_blank" rel="noopener noreferrer" class="button">View Python</a></li>
+							</ul>
+						</section>	
+					</div>
+
+				<!-- Footer -->
+				<footer id="footer">
+					<section class="split contact">
+						<section>
+							<h3>Location:</h3>
+							<p>Springfield, NJ 07081</p>
+						</section>
+						<section>
+							<h3>Phone:</h3>
+							<p>(908) 917-2653</p>
+						</section>
+					</section>
+					<section class="split contact">
+						<section>
+							<h3>Email:</h3>
+							<p><a href="#">pinfar.guo@gmail.com</a></p>
+						</section>
+						<section>
+							<h3>Social:</h3>
+							<ul class="icons alt">
+								<li><a href="https://www.linkedin.com/in/pin-far-guo/" target="_blank" rel="noopener noreferrer" class="icon brands alt fa-linkedin"><span class="label">LinkedIn</span></a></li>
+								<li><a href="https://github.com/PinfarGuo" target="_blank" rel="noopener noreferrer" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+							</ul>
+						</section>
+					</section>
+				</footer>
+
+			<!-- Copyright -->
+				<div id="copyright">
+					<ul><li>By: Pin Far Guo</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li></ul>
+				</div>
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
