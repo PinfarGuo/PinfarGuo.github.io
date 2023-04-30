@@ -1,0 +1,187 @@
+<!DOCTYPE HTML>
+<!--
+	Massively by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>PFG - Movies Project</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<span class="logo">Movie Project</span>
+					</header>
+
+				<!-- Nav -->
+					<nav id="nav">
+						<ul class="links">
+							<li><a href="index.html">Airbnb Thailand Project</a></li>
+							<li class="active"><a href="movies.html">Movies Project</a></li>
+							<li><a href="dataSalary.html">Data Salary Project</a></li>
+							<li><a href="personalInvestment.html">Personal Investment Project</a></li>
+							<li><a href="covid.html">COVID Project</a></li>
+						</ul>
+						<ul class="icons">
+							<li><a href="https://www.linkedin.com/in/pin-far-guo/" target="_blank" rel="noopener noreferrer" class="icon brands alt fa-linkedin"><span class="label">LinkedIn</span></a></li>
+							<li><a href="https://github.com/PinfarGuo" target="_blank" rel="noopener noreferrer" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+						</ul>
+					</nav>
+
+				<!-- Main -->
+					<div id="main">
+
+						<!-- Featured Post - Movies Project -->
+						<article class="post featured">
+							<img src="images/Movies_Top200.jpg" alt="" width="100%"/>
+						</article>
+
+						<!-- Post -->
+						<section class="post generic">
+							<p>Using the Movies Dataset taken from Kaggle containing over 7000 movies to find new movies to watch by using SQL to lookup stars, companies, and directors as reference. 
+								Additionally, using Python to look at other fields for more correlations that might work. 
+								Then using that gathered information present it in an Amazing Power BI Dashboard.
+							</p>
+							<ul>
+								<li>SQL - using basic, immediate, and advance SQL skills including aggregate functions, temp tables, and subqueries to help find new movies to watch.</li>
+								<li>Power BI - create an simple multi-page dashboard displaying skills in page navigation, slicers, tables, stacked bar charts, and pie charts.</li>
+								<li>Python - using python along with multiple popular libraries such as pandas, seaborn, numpy, and matplotlib in order to see if there is any additional fields that can correlate with good movies.</li>
+							</ul>
+								
+							<hr/>
+
+							<h2>SQL and Power BI</h2>
+							<p>Used simple SQL query to find the most popular stars ranked by how much their movies made.</p>
+							<pre><code>SELECT star, SUM(gross) AS GrossSum
+FROM MoviesProject..movies$
+GROUP BY star
+ORDER BY GrossSum DESC
+;</code></pre>
+							<p>I then narrow down to my favorite stars.</p>
+							<pre><code>SELECT star, gross, name, genre, year
+FROM MoviesProject..movies$
+WHERE star IN ('Robert Downey Jr.','Tom Cruise','Will Smith','Johnny Depp','Vin Diesel',
+	'Dwayne Johnson','Bruce Willis','Adam Sandler','Brad Pitt','Channing Tatum',
+	'Chris Hemsworth','Chris Pratt','Denzel Washington','Donnie Yen','Jackie Chan',
+	'Julia Roberts','Keanu Reeves','Liam Neeson','Mark Wahlberg','Matt Damon','Ryan Reynolds')
+ORDER BY star, year DESC, gross DESC
+;</code></pre>		
+							<p>With the information from the query above I created the following dashboard displaying my favorite movie stars via a drop down menu on the left.</p>
+							<img src="images/Movies_FavStar_BruceWillis.jpg" alt="" width="100%">
+
+							<p>By selecting certain genres in the pie chart you are further able to drill down to more specific movies.</p>
+							<img src="images/Movies_FavStar_AdamSandler_Comedy.jpg" alt="" width="100%">
+
+							<p>Next, I created SQL queries for the companies and directors field, but using temp tables and subqueries in order to display that skill.</p>
+							<pre><code>DROP TABLE IF EXISTS #temp_DirectorGrossSum
+CREATE TABLE #temp_DirectorGrossSum(
+director nvarchar(255),
+grossSum float
+);
+INSERT INTO #temp_DirectorGrossSum
+SELECT director, SUM(gross) AS GrossSum
+FROM MoviesProject..movies$
+GROUP BY director
+ORDER BY GrossSum DESC
+;
+-- list of movies by the TOP 10 directors
+SELECT director, gross, name, genre, year
+FROM MoviesProject..movies$
+WHERE director IN (SELECT TOP 10 director
+					FROM #temp_DirectorGrossSum
+					ORDER BY grossSum DESC
+					)
+ORDER BY director, year DESC, gross DESC
+;</code></pre>
+							<p>With this I created additional pages in Power BI in order to display clean information as well as show ability to 
+								create multiple page and simple navigation between them. </p>
+							<img src="images/Movies_TopDirectors.jpg" alt="" width="100%">
+							<p></p>
+
+							<hr/>
+
+							<h2>Python</h2>
+							<p>After creating the initial project I looked into the data further by using python in combination with popular libraries such as pandas, seaborn, numpy, and matplotlib in order to see if there are any more fields that I can use to find more movies. 
+								The python portion itself does a really good job in terms of display and flow so please 
+								<a href="https://github.com/PinfarGuo/MovieProject/blob/main/MovieCorrelations.ipynb" target="_blank" rel="noopener noreferrer">go here</a>.
+							</p>
+
+							<p>After looking for more fields with python we found budget and voters to have higher correlation.</p>
+							<pre><code>corr_matrix = df_num.corr()
+sns.heatmap(corr_matrix, annot=True)
+plt.title('Correlation Matrix - Numerical Features')
+plt.xlabel('Movies')
+plt.ylabel('Movies')
+plt.show()</code></pre>
+							<img src="images/Movies_Correlations.jpg" alt="" width="100%">
+							<p>Unfortunately looking at budget and voters further in SQL it can be seen that they are not good fields for finding new movies so no additional dashboards was created.</p>
+
+							<hr/>
+							
+							<h2>Links</h2>
+							<p>Please also take a look at the following links to the dataset, scripts, and dashboards</p>
+
+							<ul class="actions">
+								<li><a href="https://www.kaggle.com/datasets/danielgrijalvas/movies" target="_blank" rel="noopener noreferrer" class="button">View Movies Dataset</a></li>
+								<li><a href="https://github.com/PinfarGuo/MovieProject/blob/main/Movies.sql" target="_blank" rel="noopener noreferrer" class="button">View SQL Script</a></li>
+								<li><a href="https://github.com/PinfarGuo/MovieProject#readme" target="_blank" rel="noopener noreferrer" class="button disabled">View Power BI DashBoard</a></li>
+								<li><a href="https://github.com/PinfarGuo/MovieProject/blob/main/MovieCorrelations.ipynb" target="_blank" rel="noopener noreferrer" class="button">View Python Script</a></li>
+							</ul>
+							<p>Note: Apologies, currently Power BI link is not available due to not being able to open account with Power BI without a work account.</p>
+
+						</section>	
+					</div>
+
+				<!-- Footer -->
+				<footer id="footer">
+					<section class="split contact">
+						<section>
+							<h3>Location:</h3>
+							<p>Springfield, NJ 07081</p>
+						</section>
+						<section>
+							<h3>Phone:</h3>
+							<p>(908) 917-2653</p>
+						</section>
+					</section>
+					<section class="split contact">
+						<section>
+							<h3>Email:</h3>
+							<p><a href="#">pinfar.guo@gmail.com</a></p>
+						</section>
+						<section>
+							<h3>Social:</h3>
+							<ul class="icons alt">
+								<li><a href="https://www.linkedin.com/in/pin-far-guo/" target="_blank" rel="noopener noreferrer" class="icon brands alt fa-linkedin"><span class="label">LinkedIn</span></a></li>
+								<li><a href="https://github.com/PinfarGuo" target="_blank" rel="noopener noreferrer" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+							</ul>
+						</section>
+					</section>
+				</footer>
+
+			<!-- Copyright -->
+				<div id="copyright">
+					<ul><li>By: Pin Far Guo</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li></ul>
+				</div>
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
