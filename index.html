@@ -123,15 +123,89 @@
 								<p>Based on Analysis in Excel, SQL, and Tableau:</p>
 								<ul>
 									<li>top 5 area are - 'Vadhana', 'Khlong Toei', 'Sathon', 'Bang Rak', 'Phaya Thai'</li>
+									<pre><code class="language-sql">SELECT DISTINCT neighbourhood_cleansed, 
+	COUNT(id) AS listings, 
+	SUM(number_of_reviews) AS review_num, 
+	ROUND(AVG(review_scores_location),1) AS avg_score
+FROM listings
+WHERE review_scores_location IS NOT NULL  
+	AND number_of_reviews >= 100
+GROUP BY neighbourhood_cleansed
+ORDER BY review_num DESC
+;</code></pre>
+<img src="images/TopLocations.jpg" alt="" width="50%">
 									<li>the best room type is entire home/apt, private room, hotel room, shared room.</li>
+									<pre><code class="language-sql">SELECT DISTINCT room_type, 
+	SUM(number_of_reviews) AS review_num, 
+	ROUND(AVG(review_scores_location),1) AS review_score
+FROM listings
+WHERE review_scores_location IS NOT NULL 
+	AND number_of_reviews >=100
+GROUP BY room_type
+ORDER BY review_num DESC
+;</code></pre>
+<img src="images/TopRoomType.jpg" alt="" width="40%">
 									<li>the best occupancy rate is 40%+.</li>
+									<pre><code class="language-sql">SELECT DISTINCT neighbourhood_cleansed, AVG(oc.occupancy_rate) as occupancy
+FROM listings li
+JOIN #temp_occupancy_rate oc
+	ON li.id = oc.listing_id
+WHERE neighbourhood_cleansed IN ('Vadhana','Khlong Toei','Sathon','Bang Rak','Phaya Thai','Huai Khwang','Ratchathewi','Parthum Wan','Khlong San','Chatu Chak')
+GROUP BY neighbourhood_cleansed
+ORDER BY occupancy DESC
+;</code></pre>
+<img src="images/TopOccupancyRate.jpg" alt="" width="35%">
 									<li>the best price is around ฿1,200 to ฿2,400 per night, with discounts for longer stay (ex: 1 month, 3 month, 6 month, 12 month).</li>
+									<pre><code class="language-sql">SELECT neighbourhood_cleansed, 
+	SUM(number_of_reviews) AS total_reviews, 
+	ROUND(AVG(price),2) AS avg_price
+FROM listings
+WHERE review_scores_location IS NOT NULL  
+	AND number_of_reviews >= 100
+	AND price < 10000
+	AND neighbourhood_cleansed IN ('Vadhana','Khlong Toei','Sathon','Bang Rak','Phaya Thai','Huai Khwang','Ratchathewi','Parthum Wan','Khlong San','Chatu Chak')
+GROUP BY neighbourhood_cleansed
+ORDER BY total_reviews DESC,neighbourhood_cleansed,avg_price DESC
+;</code></pre>
+<img src="images/TopPrice.jpg" alt="" width="45%">
 								</ul>
 							
 
 							<hr/>
 							<h2>Share</h2>
 								<p>With the analyzed data that have been gathered I created an interactive dashboard in Tableau using KPIs, map, and filters to display the information in a quick and easy to understand visualization.</p>
+								<div class='tableauPlaceholder' id='viz1682946254307' style='position: relative'>
+									<noscript><a href='#'>
+										<img alt='Dashboard 1 ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Ai&#47;AirbnbThailand_16827895828170&#47;Dashboard1&#47;1_rss.png' style='border: none' /></a></noscript>
+										<object class='tableauViz'  style='display:none;'>
+											<param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> 
+											<param name='embed_code_version' value='3' /> 
+											<param name='site_root' value='' />
+											<param name='name' value='AirbnbThailand_16827895828170&#47;Dashboard1' />
+											<param name='tabs' value='no' />
+											<param name='toolbar' value='yes' />
+											<param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Ai&#47;AirbnbThailand_16827895828170&#47;Dashboard1&#47;1.png' /> 
+											<param name='animate_transition' value='yes' />
+											<param name='display_static_image' value='yes' />
+											<param name='display_spinner' value='yes' />
+											<param name='display_overlay' value='yes' />
+											<param name='display_count' value='yes' />
+											<param name='language' value='en-US' />
+											<param name='filter' value='publish=yes' />
+										</object>
+									</div>                
+									<script type='text/javascript'>                    
+									var divElement = document.getElementById('viz1682946254307');                    
+									var vizElement = divElement.getElementsByTagName('object')[0];                    
+									if ( divElement.offsetWidth > 800 ) { 
+										vizElement.style.width='1200px';vizElement.style.height='727px';} 
+										else if ( divElement.offsetWidth > 500 ) { 
+											vizElement.style.width='1200px';vizElement.style.height='727px';} 
+											else { vizElement.style.width='100%';vizElement.style.height='1077px';}                     
+											var scriptElement = document.createElement('script');                    
+											scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    
+											vizElement.parentNode.insertBefore(scriptElement, vizElement);                
+											</script>
 
 								<a href="https://public.tableau.com/app/profile/pinfar.guo/viz/AirbnbThailand_16827895828170/Dashboard1?publish=yes" target="_blank" rel="noopener noreferrer" class="button">Airbnb Thailand Dashboard</a>
 								<br/>
